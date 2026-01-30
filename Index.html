@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kas X TKJ 4</title>
+
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- BACKGROUND VIDEO -->
+<video autoplay muted loop playsinline class="bg-video">
+  <source src="assets/bg.mp4" type="video/mp4">
+</video>
+
+<!-- NAV -->
+<nav class="navbar fade-down" id="navbar">
+  <div class="nav-inner">
+    <span class="logo">X TKJ 4</span>
+    <div class="nav-links">
+      <a href="#kas">Laporan</a>
+      <a href="#about">About</a>
+      <a href="#backup">Backup</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ================= SECTION 1 : KAS ================= -->
+<section id="kas" class="container">
+  <div class="card fade-up">
+    <h2>Kas X TKJ 4</h2>
+
+    <input id="ket" placeholder="Keterangan">
+    <input id="jumlah" type="number" placeholder="Jumlah">
+
+    <button onclick="tambah('masuk')">+ Pemasukan</button>
+    <button class="secondary" onclick="tambah('keluar')">- Pengeluaran</button>
+
+    <h3 id="saldo" style="margin-top:20px;color:var(--blue)"></h3>
+
+    <div id="list"></div>
+  </div>
+</section>
+
+<!-- ================= SECTION 2 : LAPORAN ================= -->
+<section id="laporan" class="center">
+  <div class="card fade-up" style="max-width:700px;width:100%;">
+    <h2>Laporan Kas</h2>
+
+    <div class="laporan-grid">
+      <div class="lap-box masuk">
+        <p>Total Pemasukan</p>
+        <h3 id="totalMasuk">Rp 0</h3>
+      </div>
+
+      <div class="lap-box keluar">
+        <p>Total Pengeluaran</p>
+        <h3 id="totalKeluar">Rp 0</h3>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SECTION 3 : ABOUT ================= -->
+<section id="about" class="center">
+  <div class="card fade-up" style="max-width:600px;">
+    <img src="assets/foto.jpg"
+         style="width:120px;border-radius:50%;margin-bottom:20px">
+
+    <h2>Gustav Maulana</h2>
+    <p style="color:var(--muted);margin-top:14px">
+      Website ini saya buat khusus untuk X TKJ 4
+      agar menghitung pengeluaran kas lebih efisien
+      dengan sistem digital.
+    </p>
+  </div>
+</section>
+
+<!-- ================= SECTION 4 : BACKUP ================= -->
+<section id="backup" class="center">
+  <div class="card fade-up">
+    <h2>Backup Data</h2>
+
+    <button onclick="exportJSON()">Export JSON</button>
+    <button onclick="triggerImport()">Import JSON</button>
+
+    <input
+      type="file"
+      id="importFile"
+      accept=".json"
+      style="display:none"
+      onchange="importJSON(this.files[0])"
+    />
+  </div>
+</section>
+
+<script src="script.js"></script>
+</body>
+</html>
