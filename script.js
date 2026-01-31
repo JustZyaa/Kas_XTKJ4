@@ -31,21 +31,32 @@ function tambah(jenis) {
   }
 
   const data = getData();
-  data.transaksi.push({
-    id: Date.now(),
-    tanggal: new Date().toISOString().slice(0,10),
-    jenis,
-    ket,
-    jumlah
-  });
+
+  if (editId) {
+    // MODE EDIT
+    const trx = data.transaksi.find(t => t.id === editId);
+    trx.ket = ket;
+    trx.jumlah = jumlah;
+    trx.jenis = jenis;
+
+    editId = null;
+  } else {
+    // MODE TAMBAH
+    data.transaksi.push({
+      id: Date.now(),
+      tanggal: new Date().toISOString().slice(0,10),
+      jenis,
+      ket,
+      jumlah
+    });
+  }
 
   saveData(data);
 
-  // RESET INPUT (INI PENTING BUAT UX)
   ketInput.value = "";
   jumlahInput.value = "";
 
-  render(); // pastikan render ke-trigger
+  render();
 }
 
 function saldo(data) {
@@ -56,33 +67,114 @@ function saldo(data) {
 
 function render() {
   const data = getData();
-  const list = document.getElementById("list");
+
+  const listMasuk = document.getElementById("listMasuk");
+  const listKeluar = document.getElementById("listKeluar");
   const saldoEl = document.getElementById("saldo");
+
+  listMasuk.innerHTML = "";
+  listKeluar.innerHTML = "";
 
   let saldo = 0;
 
-  if (list) list.innerHTML = "";
-
-  data.transaksi.forEach(t => {
+  data.transaksi.forEach((t, i) => {
     saldo += t.jenis === "masuk" ? t.jumlah : -t.jumlah;
 
-    if (list) {
-      const div = document.createElement("div");
-      div.className = "trx fade-up";
-      div.innerHTML = `
+    const div = document.createElement("div");
+      div.className = "trx fade-stagger";
+      div.dataset.id = t.id;
+      div.style.animationDelay = `${i * 0.06}s`;
+
+
+    div.innerHTML = `
+      <div>
         <span>${t.ket}</span>
-        <strong>${t.jenis === "masuk" ? "+" : "-"} Rp ${t.jumlah.toLocaleString("id-ID")}</strong>
-      `;
-      list.appendChild(div);
+        <small style="color:var(--muted);display:block">${t.tanggal}</small>
+      </div>
+
+      <div style="text-align:right">
+        <strong style="color:${t.jenis === "masuk" ? "#22c55e" : "#ef4444"}">
+          ${t.jenis === "masuk" ? "+" : "-"} Rp ${t.jumlah.toLocaleString("id-ID")}
+        </strong>
+        <button class="edit-btn" onclick="editTransaksi(${t.id})">EDIT</button>
+      </div>
+    `;
+
+    if (t.jenis === "masuk") {
+      listMasuk.appendChild(div);
+    } else {
+      listKeluar.appendChild(div);
     }
   });
 
-  if (saldoEl) {
-    saldoEl.innerText = "Saldo: Rp " + saldo.toLocaleString("id-ID");
+  saldoEl.innerText = "Saldo: Rp " + saldo.toLocaleString("id-ID");
+
+  updateLaporan(data);
+}
+
+document.addEventListener("click", function (e) {
+  const btn = e.target.closest(".edit-btn");
+  if (!btn) return;
+
+  const trxEl = btn.closest(".trx");
+  if (!trxEl) return;
+
+  const id = Number(trxEl.dataset.id);
+
+  console.log("EDIT CLICKED:", id); // 🔥 sekarang angka, bukan NaN
+  editTransaksi(id);
+});
+
+
+let editId = null;
+
+/* =======================
+   EDIT TRANSAKSI
+======================= */
+function editTransaksi(id) {
+  const data = getData();
+  const trx = data.transaksi.find(t => t.id === id);
+  if (!trx) return;
+
+  editId = id;
+
+  document.getElementById("editKet").value = trx.ket;
+  document.getElementById("editJumlah").value = trx.jumlah;
+
+  document.getElementById("editModal").classList.remove("hidden");
+}
+
+/* =======================
+   SIMPAN EDIT
+======================= */
+function simpanEdit() {
+  const ket = document.getElementById("editKet").value.trim();
+  const jumlah = Number(document.getElementById("editJumlah").value);
+
+  if (!ket || jumlah <= 0) {
+    alert("Data tidak valid");
+    return;
   }
 
-  // 🔥 PANGGIL LAPORAN DI SINI
-  updateLaporan(data);
+  const data = getData();
+  const trx = data.transaksi.find(t => t.id === editId);
+  if (!trx) return;
+
+  trx.ket = ket;
+  trx.jumlah = jumlah;
+
+  saveData(data);
+  editId = null;
+
+  tutupModal();
+  render();
+}
+
+/* =======================
+   TUTUP MODAL
+======================= */
+function tutupModal() {
+  document.getElementById("editModal").classList.add("hidden");
 }
 
 function updateLaporan(data) {
@@ -145,3 +237,22 @@ window.addEventListener('scroll', () => {
 
   lastScrollY = currentScrollY;
 });
+
+function showKasTab(type, btn) {
+  const masuk = document.getElementById("listMasuk");
+  const keluar = document.getElementById("listKeluar");
+
+  masuk.style.display = "none";
+  keluar.style.display = "none";
+
+  document.querySelectorAll(".tab-btn")
+    .forEach(b => b.classList.remove("active"));
+
+  if (type === "masuk") {
+    masuk.style.display = "block";
+  } else {
+    keluar.style.display = "block";
+  }
+
+  btn.classList.add("active");
+}
