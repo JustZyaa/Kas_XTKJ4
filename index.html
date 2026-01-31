@@ -4,6 +4,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kas X TKJ 4</title>
 
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+
   <!-- Google Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,6 +14,21 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+  <!-- ===== EDIT MODAL ===== -->
+<div id="editModal" class="modal hidden">
+  <div class="modal-card fade-up">
+    <h3>Edit Transaksi</h3>
+
+    <input id="editKet" placeholder="Keterangan">
+    <input id="editJumlah" type="number" placeholder="Jumlah">
+
+    <div style="display:flex; gap:10px; margin-top:16px">
+      <button onclick="simpanEdit()">Simpan</button>
+      <button class="secondary" onclick="tutupModal()">Batal</button>
+    </div>
+  </div>
+</div>
 
 <!-- BACKGROUND VIDEO -->
 <video autoplay muted loop playsinline class="bg-video">
@@ -43,7 +60,17 @@
 
     <h3 id="saldo" style="margin-top:20px;color:var(--blue)"></h3>
 
-    <div id="list"></div>
+    <!-- TAB TRANSAKSI -->
+<div class="tab-buttons">
+  <button class="tab-btn active" onclick="showKasTab('masuk', this)">Pemasukan</button>
+  <button class="tab-btn" onclick="showKasTab('keluar', this)">Pengeluaran</button>
+</div>
+
+<div id="listMasuk" class="kas-list"></div>
+<div id="listKeluar" class="kas-list" style="display:none"></div>
+<button class="edit-btn"></button>
+
+
   </div>
 </section>
 
@@ -102,4 +129,3 @@
 <script src="script.js"></script>
 </body>
 </html>
-
