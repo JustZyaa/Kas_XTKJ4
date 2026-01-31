@@ -242,3 +242,83 @@ section {
     transform: translateY(0);
   }
 }
+
+.tab-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.tab-btn.active {
+  background: var(--blue);
+  color: #020617;
+}
+
+.kas-list {
+  margin-top: 16px;
+  animation: fadeUp .4s ease;
+}
+
+.hidden {
+  display: none;
+}
+
+.fade-stagger {
+  opacity: 0;
+  transform: translateY(-10px);
+  animation: staggerFade 0.45s ease forwards;
+}
+
+@keyframes staggerFade {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.edit-btn {
+  background: transparent;
+  border: none;
+  color: var(--blue);
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 6px;
+}
+
+/* ===== MODAL ===== */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(2,6,23,0.6);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.modal-card {
+  width: 100%;
+  max-width: 420px;
+  background: rgba(15,23,42,.6);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 22px;
+  padding: 28px;
+  box-shadow: 0 40px 80px rgba(0,0,0,.6);
+}
+
+.hidden {
+  display: none;
+}
